@@ -1,0 +1,128 @@
+/* index.css */
+
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 20px;
+}
+
+/* Container for the app */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+input {
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+/* Button Styling */
+button {
+  padding: 10px 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #357ab7;
+}
+
+/* Contacts List */
+h3 {
+  margin-top: 30px;
+  text-align: center;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  background-color: #fff;
+  margin-bottom: 12px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+h4 {
+  font-size: 1.1rem;
+  margin: 0;
+  width: 200px;
+}
+
+p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+button {
+  margin-left: 10px;
+}
+
+/* Delete and Edit Buttons */
+button {
+  background-color: #e74c3c;
+}
+
+button:hover {
+  background-color: #c0392b;
+}
+
+.edit-btn {
+  background-color: #2ecc71;
+}
+
+.edit-btn:hover {
+  background-color: #27ae60;
+}
+
+/* Empty List message */
+p {
+  text-align: center;
+  font-style: italic;
+  color: #777;
+}
