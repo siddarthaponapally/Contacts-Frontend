@@ -120,6 +120,18 @@ li:hover {
   transform: translateY(-2px);
 }
 
+.no-contacts {
+  text-align: center;
+  padding: 60px 20px;
+  margin-top: 30px;
+  background-color: #f0f4f8;
+  border: 2px dashed #b0bec5;
+  border-radius: 10px;
+  color: #607d8b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease-in-out;
+}
+
 .contact-name{
   width: 150px;
 }
