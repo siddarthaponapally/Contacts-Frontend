@@ -8,7 +8,7 @@ const App = () => {
 
   const getContacts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/contacts/contacts');
+      const response = await fetch('https://contacts-backend-adqr.onrender.com/contacts/allcontacts');
       const data = await response.json();
       setContacts(data);
     } catch (error) {
@@ -19,7 +19,7 @@ const App = () => {
   const getContact = async (id) => {
     if (!id) return;
     try {
-      const response = await fetch(`http://localhost:5000/contacts/contact/${id}`);
+      const response = await fetch(`https://contacts-backend-adqr.onrender.com/contacts/contact/${id}`);
       const data = await response.json();
       setFormdata({ name: data.name, mobileno: data.mobileno });
       setEditingContact(data._id);
@@ -34,8 +34,8 @@ const App = () => {
   const onSubmitForm = async (e) => {
     e.preventDefault();
     const url = editingContact
-      ? `http://localhost:5000/contacts/update/${editingContact}`
-      : 'http://localhost:5000/contacts/add-contact';
+      ? `https://contacts-backend-adqr.onrender.com/contacts/update/${editingContact}`
+      : 'https://contacts-backend-adqr.onrender.com/contacts/add-contact';
 
     const options = {
       method: editingContact ? 'PUT' : 'POST',
@@ -66,7 +66,7 @@ const App = () => {
 
   const onDelete = async (id) => {
     try {
-      await fetch(`http://localhost:5000/contacts/delete/${id}`, {
+      await fetch(`https://contacts-backend-adqr.onrender.com/contacts/delete/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });
