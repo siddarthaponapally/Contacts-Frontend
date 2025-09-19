@@ -1,150 +1,132 @@
-
-
-
-import React, { useState, useEffect } from 'react';
-
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import './App.css';
 
 const App = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    mobileno: '',
-  });
-
   const [contacts, setContacts] = useState([]);
-  const [editingContact, setEditingContact] = useState(null); // Track if we're editing a contact
+  const [formdata, setFormdata] = useState({ name: '', mobileno: '' });
+  const [editingContact, setEditingContact] = useState(null);
 
-  // Fetch all contacts
   const getContacts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/contacts/allcontacts');
+      const response = await fetch('http://localhost:5000/contacts/contacts');
       const data = await response.json();
-      console.log('Contacts:', data); // Debug: check if contacts are fetched correctly
       setContacts(data);
     } catch (error) {
-      console.log('Error fetching contacts:', error);
+      console.log("Error fetching contacts", error);
     }
   };
 
-  // Fetch a single contact (for editing)
   const getContact = async (id) => {
-    if (!id) return; // Add a check to ensure id is valid
+    if (!id) return;
     try {
       const response = await fetch(`http://localhost:5000/contacts/contact/${id}`);
       const data = await response.json();
-      console.log('Editing contact:', data); // Debug: check if contact is fetched for editing
-      setFormData({ name: data.name, mobileno: data.mobileno });
-      setEditingContact(data._id); // Set editing state to the current contact _id
+      setFormdata({ name: data.name, mobileno: data.mobileno });
+      setEditingContact(data._id);
     } catch (error) {
       console.log('Error fetching contact for edit:', error);
     }
   };
 
-  // Add or Update contact
+  const onNameChange = (e) => setFormdata(prev => ({ ...prev, name: e.target.value }));
+  const onMobilenoChange = (e) => setFormdata(prev => ({ ...prev, mobileno: e.target.value }));
+
   const onSubmitForm = async (e) => {
     e.preventDefault();
     const url = editingContact
-      ? `http://localhost:5000/contacts/update/${editingContact}` // Update route
-      : 'http://localhost:5000/contacts/add-contact'; // Add route
+      ? `http://localhost:5000/contacts/update/${editingContact}`
+      : 'http://localhost:5000/contacts/add-contact';
 
     const options = {
-      method: editingContact ? 'PUT' : 'POST', // Use PUT if editing, POST if adding
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
+      method: editingContact ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formdata),
     };
 
     try {
       const response = await fetch(url, options);
       const data = await response.json();
-      console.log('Success:', data);
       alert(editingContact ? 'Contact Updated' : 'Contact Added');
-      
-      // Update the contacts list (either by replacing or adding the contact)
+
       if (editingContact) {
-        setContacts((prevContacts) =>
-          prevContacts.map((contact) =>
-            contact._id === editingContact ? { ...contact, ...formData } : contact
-          )
+        setContacts(prev =>
+          prev.map(contact => contact._id === editingContact ? { ...contact, ...formdata } : contact)
         );
       } else {
-        // For new contact, just add it to the list
-        setContacts((prevContacts) => [...prevContacts, { _id: data._id, ...formData }]);
+        setContacts(prev => [...prev, { _id: data._id, ...formdata }]);
       }
 
-      setFormData({ name: '', mobileno: '' }); // Clear form
-      setEditingContact(null); // Reset editing state
+      setFormdata({ name: '', mobileno: '' });
+      setEditingContact(null);
     } catch (error) {
       console.log('Error submitting form:', error);
       alert('Error submitting form');
     }
   };
 
-  // Handle input changes
-  const onNameChange = (e) => setFormData((prev) => ({ ...prev, name: e.target.value }));
-  const onMobileChange = (e) => setFormData((prev) => ({ ...prev, mobileno: e.target.value }));
-
-  // Delete contact
-  const deleteContact = async (id) => {
-    if (!id) return; // Add a check to ensure id is valid
-    const url = `http://localhost:5000/contacts/delete/${id}`;
+  const onDelete = async (id) => {
     try {
-      const response = await fetch(url, { method: 'DELETE' });
-      const data = await response.json();
-      console.log('Deleted contact:', data); // Debug: check if delete is successful
-      setContacts((prevContacts) => prevContacts.filter((contact) => contact._id !== id)); // Remove from the list
+      await fetch(`http://localhost:5000/contacts/delete/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      getContacts();
+      alert("Contact deleted successfully");
     } catch (error) {
-      console.log('Error deleting contact:', error);
-      alert('Error deleting contact');
+      console.log("Error deleting contact", error);
     }
   };
 
   useEffect(() => {
-    getContacts(); // Fetch contacts when the component mounts
+    getContacts();
   }, []);
 
   return (
-    <>
-      <h2>{editingContact ? 'Edit Contact' : 'Add Contact'}</h2>
+    <div className="container">
+      <h1>{editingContact ? 'Edit Contact' : 'Add Contact'}</h1>
+
       <form onSubmit={onSubmitForm}>
-        <label htmlFor="name">Name</label>
-        <input
-          id="name"
-          type="text"
-          value={formData.name}
-          onChange={onNameChange}
-        />
-        <br />
-        <label htmlFor="mobileno">Mobile No</label>
-        <input
-          id="mobileno"
-          type="text"
-          value={formData.mobileno}
-          onChange={onMobileChange}
-        />
-        <br />
-        <button type="submit">{editingContact ? 'Update' : 'Submit'}</button>
+        <label htmlFor='name'>Name</label>
+        <input id='name' type='text' onChange={onNameChange} value={formdata.name} required />
+
+        <label htmlFor='mobileno'>Mobile No</label>
+        <input id='mobileno' type='text' onChange={onMobilenoChange} value={formdata.mobileno} required />
+
+        <div className="form-buttons">
+          <button type="submit" className="submit-btn">
+            {editingContact ? 'Update' : 'Submit'}
+          </button>
+          {editingContact && (
+            <button
+              type="button"
+              className="cancel-btn"
+              onClick={() => {
+                setEditingContact(null);
+                setFormdata({ name: '', mobileno: '' });
+              }}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </form>
 
-      <h3>Contacts List</h3>
-      <ul>
-        {contacts.length > 0 ? (
-          contacts.map((contact) => (
-            <li key={contact._id}>
-              <h4>{contact.name}</h4>
+      <ul className="contacts-grid">
+        {contacts.map((contact) => (
+          <li key={contact._id}>
+            <div className="contact-info">
+              <h3>{contact.name}</h3>
               <p>{contact.mobileno}</p>
-              <button onClick={() => deleteContact(contact._id)}>Delete</button>
-              <button onClick={() => getContact(contact._id)}>Edit</button>
-            </li>
-          ))
-        ) : (
-          <p>No contacts available</p>
-        )}
+            </div>
+            <div className="contact-actions">
+              <button className="edit-btn" onClick={() => getContact(contact._id)}>Edit</button>
+              <button className="delete-btn" onClick={() => onDelete(contact._id)}>Delete</button>
+            </div>
+          </li>
+        ))}
       </ul>
-    </>
+    </div>
   );
 };
 
 export default App;
-
