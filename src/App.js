@@ -112,8 +112,9 @@ const App = () => {
       </form>
 
       <ul className="contacts-grid">
-        {contacts.map((contact) => (
-          <li key={contact._id}>
+        {contacts.length===0 ? (<h2 className='no-contacts'> No Contacts Found </h2>) : contacts.map((contact) => (
+       
+          (<li key={contact._id}>
             <div className="contact-info">
               <h3>{contact.name}</h3>
               <p>{contact.mobileno}</p>
@@ -122,7 +123,7 @@ const App = () => {
               <button className="edit-btn" onClick={() => getContact(contact._id)}>Edit</button>
               <button className="delete-btn" onClick={() => onDelete(contact._id)}>Delete</button>
             </div>
-          </li>
+          </li>)
         ))}
       </ul>
     </div>
